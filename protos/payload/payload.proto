@@ -1,0 +1,80 @@
+syntax = "proto3";
+
+package mavsdk.rpc.payload;
+
+import "mavsdk_options.proto";
+
+option java_package = "io.mavsdk.payload";
+option java_outer_classname = "PayloadProto";
+
+// Query payload information.
+service PayloadService {
+
+    /*
+     * Get the list of all connected payloads.
+     */
+    rpc GetPayloadList(GetPayloadListRequest) returns(GetPayloadListResponse) {}
+
+    /*
+     * Subscribe to payload updates.
+     */
+    rpc SubscribePayloadUpdate(SubscribePayloadUpdateRequest) returns(stream PayloadUpdateResponse) { option (mavsdk.options.async_type) = SYNC; }
+}
+
+enum PayloadType {
+    PAYLOAD_CAMERA = 0; // Generic Camera Payload
+    PAYLOAD_LIDAR = 1; // Light Detection and Ranging Payload
+    PAYLOAD_WINCH = 2; // Winch Payload
+    PAYLOAD_ACOUSTIC_MODEM  = 3; // Acoustic Modem Payload
+    PAYLOAD_SAS  = 4; // Single Aperture Sonar Payload
+    PAYLOAD_MBES = 5; // Multi Beam Echo Sounder Payload
+    PAYLOAD_FLS  = 6; // Forward Look Sonar Payload
+    PAYLOAD_GENERIC_1 = 1001; // Generic Payload 1
+    PAYLOAD_GENERIC_2 = 1002; // Generic Payload 2
+    PAYLOAD_GENERIC_3 = 1003; // Generic Payload 3
+    PAYLOAD_GENERIC_4 = 1004; // Generic Payload 4
+    PAYLOAD_GENERIC_5 = 1005; // Generic Payload 5
+}
+
+enum PayloadState {
+    PAYLOAD_STATE_NONE = 0x00;
+    PAYLOAD_STATE_POWERED = 0x01;
+    PAYLOAD_STATE_ARMED = 0x02;
+    PAYLOAD_STATE_ACTIVE = 0x04;
+}
+
+message PayloadItem {
+    uint32 id = 1; // The payload ID
+    string name = 2; // The payload name
+    PayloadType payload_type = 3; // The payload type
+    PayloadState valid_states = 4; // The valid states
+}
+
+message GetPayloadListRequest {}
+
+message GetPayloadListResponse {
+    PayloadResult result = 1;
+    repeated PayloadItem payload_items = 2; // The payloads listed
+}
+
+message SubscribePayloadUpdateRequest {}
+message PayloadUpdateResponse {
+    PayloadResult result = 1;
+    repeated PayloadItem payload_items = 2;
+}
+
+
+// Result type.
+message PayloadResult {
+    // Possible results returned for param requests.
+    enum Result {
+        RESULT_UNKNOWN = 0; // Unknown result
+        RESULT_SUCCESS = 1; // Request succeeded
+        CONNECTION_ERROR = 2; // Connection error
+        NO_SYSTEM = 3; // No system available
+        TIMEOUT = 4; // Timeout happened
+    }
+
+    Result result = 1; // Result enum value
+    string result_str = 2; // Human-readable English string describing the result
+}
