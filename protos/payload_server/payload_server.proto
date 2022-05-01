@@ -29,12 +29,12 @@ enum PayloadType {
     PAYLOAD_TYPE_SAS  = 4; // Single Aperture Sonar Payload
     PAYLOAD_TYPE_MBES = 5; // Multi Beam Echo Sounder Payload
     PAYLOAD_TYPE_FLS  = 6; // Forward Look Sonar Payload
-    PAYLOAD_TYPE_GENERIC_1 = 1001; // Generic Payload 1
-    PAYLOAD_TYPE_GENERIC_2 = 1002; // Generic Payload 2
-    PAYLOAD_TYPE_GENERIC_3 = 1003; // Generic Payload 3
-    PAYLOAD_TYPE_GENERIC_4 = 1004; // Generic Payload 4
-    PAYLOAD_TYPE_GENERIC_5 = 1005; // Generic Payload 5
-    PAYLOAD_TYPE_UNKNOWN = 9999; // Unknown Payload
+    PAYLOAD_TYPE_GENERIC_1 = 101; // Generic Payload 1
+    PAYLOAD_TYPE_GENERIC_2 = 102; // Generic Payload 2
+    PAYLOAD_TYPE_GENERIC_3 = 103; // Generic Payload 3
+    PAYLOAD_TYPE_GENERIC_4 = 104; // Generic Payload 4
+    PAYLOAD_TYPE_GENERIC_5 = 105; // Generic Payload 5
+    PAYLOAD_TYPE_UNKNOWN = 255; // Unknown Payload
 }
 
 message PayloadState {
