@@ -22,18 +22,19 @@ service PayloadService {
 }
 
 enum PayloadType {
-    PAYLOAD_CAMERA = 0; // Generic Camera Payload
-    PAYLOAD_LIDAR = 1; // Light Detection and Ranging Payload
-    PAYLOAD_WINCH = 2; // Winch Payload
-    PAYLOAD_ACOUSTIC_MODEM  = 3; // Acoustic Modem Payload
-    PAYLOAD_SAS  = 4; // Single Aperture Sonar Payload
-    PAYLOAD_MBES = 5; // Multi Beam Echo Sounder Payload
-    PAYLOAD_FLS  = 6; // Forward Look Sonar Payload
-    PAYLOAD_GENERIC_1 = 1001; // Generic Payload 1
-    PAYLOAD_GENERIC_2 = 1002; // Generic Payload 2
-    PAYLOAD_GENERIC_3 = 1003; // Generic Payload 3
-    PAYLOAD_GENERIC_4 = 1004; // Generic Payload 4
-    PAYLOAD_GENERIC_5 = 1005; // Generic Payload 5
+    PAYLOAD_TYPE_CAMERA = 0; // Generic Camera Payload
+    PAYLOAD_TYPE_LIDAR = 1; // Light Detection and Ranging Payload
+    PAYLOAD_TYPE_WINCH = 2; // Winch Payload
+    PAYLOAD_TYPE_ACOUSTIC_MODEM  = 3; // Acoustic Modem Payload
+    PAYLOAD_TYPE_SAS  = 4; // Single Aperture Sonar Payload
+    PAYLOAD_TYPE_MBES = 5; // Multi Beam Echo Sounder Payload
+    PAYLOAD_TYPE_FLS  = 6; // Forward Look Sonar Payload
+    PAYLOAD_TYPE_GENERIC_1 = 1001; // Generic Payload 1
+    PAYLOAD_TYPE_GENERIC_2 = 1002; // Generic Payload 2
+    PAYLOAD_TYPE_GENERIC_3 = 1003; // Generic Payload 3
+    PAYLOAD_TYPE_GENERIC_4 = 1004; // Generic Payload 4
+    PAYLOAD_TYPE_GENERIC_5 = 1005; // Generic Payload 5
+    PAYLOAD_TYPE_UNKNOWN = 9999; // Unknown Payload
 }
 
 message PayloadState {
