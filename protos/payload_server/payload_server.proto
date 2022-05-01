@@ -36,11 +36,10 @@ enum PayloadType {
     PAYLOAD_GENERIC_5 = 1005; // Generic Payload 5
 }
 
-enum PayloadState {
-    PAYLOAD_STATE_NONE = 0x00;
-    PAYLOAD_STATE_POWERED = 0x01;
-    PAYLOAD_STATE_ARMED = 0x02;
-    PAYLOAD_STATE_ACTIVE = 0x04;
+message PayloadState {
+    bool powered = 1;
+    bool armed = 2;
+    bool active = 3;
 }
 
 message PayloadItem {
