@@ -18,7 +18,7 @@ service PayloadService {
     /*
      * Subscribe to payload updates.
      */
-    rpc SubscribePayloadUpdate(SubscribePayloadUpdateRequest) returns(stream PayloadUpdateResponse) { option (mavsdk.options.async_type) = SYNC; }
+    rpc SubscribePayloadUpdate(SubscribePayloadUpdateRequest) returns(stream PayloadUpdateResponse) { option (mavsdk.options.async_type) = ASYNC; }
 }
 
 enum PayloadType {
@@ -59,8 +59,7 @@ message GetPayloadListResponse {
 
 message SubscribePayloadUpdateRequest {}
 message PayloadUpdateResponse {
-    PayloadResult payload_result = 1;
-    repeated PayloadItem payload_items = 2;
+    bool reserved = 1; // Ignore value
 }
 
 
