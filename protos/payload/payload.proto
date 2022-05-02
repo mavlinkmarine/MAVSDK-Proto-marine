@@ -73,6 +73,7 @@ message PayloadResult {
         RESULT_NO_SYSTEM = 3; // No system available
         RESULT_TIMEOUT = 4; // Timeout happened
         RESULT_MULTIPLE_IDS_ERROR = 5; // Multiple entries with same payload ID in list
+        RESULT_BUSY = 6; // Transfer already in progress
     }
 
     Result result = 1; // Result enum value
