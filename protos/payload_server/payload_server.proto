@@ -24,6 +24,11 @@ service PayloadServerService {
      * Set payload status.
      */
     rpc SetPayloadStatus(SetPayloadStatusRequest) returns(SetPayloadStatusResponse) { option (mavsdk.options.async_type) = SYNC; }
+
+    /*
+     * Get payload status.
+     */
+    rpc GetPayloadStatus(GetPayloadStatusRequest) returns(GetPayloadStatusResponse) { option (mavsdk.options.async_type) = SYNC; }
 }
 
 enum PayloadType {
@@ -87,6 +92,15 @@ message SetPayloadStatusRequest {
 
 message SetPayloadStatusResponse {
     PayloadServerResult payload_server_result = 1;
+}
+
+message GetPayloadStatusRequest {
+    uint32 id = 1; // The payload ID
+}
+
+message GetPayloadStatusResponse {
+    PayloadServerResult payload_server_result = 1;
+    PayloadStatus payload_status = 2; // The payload status
 }
 
 // Result type.
