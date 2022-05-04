@@ -19,6 +19,11 @@ service PayloadService {
      * Subscribe to payload updates.
      */
     rpc SubscribePayloadUpdate(SubscribePayloadUpdateRequest) returns(stream PayloadUpdateResponse) { option (mavsdk.options.async_type) = ASYNC; }
+
+    /*
+     * Get payload status.
+     */
+    rpc GetPayloadStatus(GetPayloadStatusRequest) returns(GetPayloadStatusResponse) {}
 }
 
 enum PayloadType {
@@ -62,6 +67,23 @@ message PayloadUpdateResponse {
     bool reserved = 1; // Ignore value
 }
 
+message PayloadHealth {
+    bool health_generic = 1; // whether payload is healthy
+}
+
+message PayloadStatus {
+    PayloadHealth payload_health = 1; // Payload health
+    PayloadState payload_state = 2; // Payload state
+}
+
+message GetPayloadStatusRequest {
+    uint32 id = 1; // The payload ID
+}
+
+message GetPayloadStatusResponse {
+    PayloadResult payload_result = 1;
+    PayloadStatus payload_status = 2; // The payload status
+}
 
 // Result type.
 message PayloadResult {
