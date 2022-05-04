@@ -19,6 +19,11 @@ service PayloadServerService {
      * Remove payload.
      */
     rpc RemovePayload(RemovePayloadRequest) returns(RemovePayloadResponse) { option (mavsdk.options.async_type) = SYNC; }
+
+    /*
+     * Set payload status.
+     */
+    rpc SetPayloadStatus(SetPayloadStatusRequest) returns(SetPayloadStatusResponse) { option (mavsdk.options.async_type) = SYNC; }
 }
 
 enum PayloadType {
@@ -38,9 +43,9 @@ enum PayloadType {
 }
 
 message PayloadState {
-    bool powered = 1;
-    bool armed = 2;
-    bool active = 3;
+    bool powered = 1; // Whether payload is powered
+    bool armed = 2; // Whether payload is armed
+    bool active = 3; // Whether payload is active
 }
 
 message PayloadItem {
@@ -66,6 +71,23 @@ message RemovePayloadResponse {
     PayloadServerResult payload_server_result = 1;
 }
 
+message PayloadHealth {
+    bool health_generic = 1; // whether payload is healthy
+}
+
+message PayloadStatus {
+    PayloadHealth payload_health = 1; // Payload health
+    PayloadState payload_state = 2; // Payload state
+}
+
+message SetPayloadStatusRequest {
+    uint32 id = 1; // The payload ID
+    PayloadStatus payload_status = 2; // The payload status
+}
+
+message SetPayloadStatusResponse {
+    PayloadServerResult payload_server_result = 1;
+}
 
 // Result type.
 message PayloadServerResult {
