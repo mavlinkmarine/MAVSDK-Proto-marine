@@ -31,6 +31,7 @@ service PayloadService {
     rpc SetPayloadState(SetPayloadStateRequest) returns(SetPayloadStateResponse) {}
 }
 
+// Supported payload types
 enum PayloadType {
     PAYLOAD_TYPE_CAMERA = 0; // Generic Camera Payload
     PAYLOAD_TYPE_LIDAR = 1; // Light Detection and Ranging Payload
@@ -47,12 +48,14 @@ enum PayloadType {
     PAYLOAD_TYPE_UNKNOWN = 255; // Unknown Payload
 }
 
+// State of registered payload
 message PayloadState {
-    bool powered = 1;
-    bool armed = 2;
-    bool active = 3;
+    bool powered = 1; // Whether payload is powered
+    bool armed = 2; // Whether payload is armed
+    bool active = 3; // Whether payload is active
 }
 
+// Type for one payload item
 message PayloadItem {
     uint32 id = 1; // The payload ID
     string name = 2; // The payload name
@@ -72,10 +75,12 @@ message PayloadUpdateResponse {
     bool reserved = 1; // Ignore value
 }
 
+// Payload health type
 message PayloadHealth {
     bool health_generic = 1; // whether payload is healthy
 }
 
+// Payload status type including health and state
 message PayloadStatus {
     PayloadHealth payload_health = 1; // Payload health
     PayloadState payload_state = 2; // Payload state
@@ -102,7 +107,7 @@ message SetPayloadStateResponse {
 
 // Result type.
 message PayloadResult {
-    // Possible results returned for param requests.
+    // Possible results returned for payload requests.
     enum Result {
         RESULT_UNKNOWN = 0; // Unknown result
         RESULT_SUCCESS = 1; // Request succeeded
