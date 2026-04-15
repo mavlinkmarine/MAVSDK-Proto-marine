@@ -55,7 +55,7 @@ message AddPayloadRequest {
 }
 
 message AddPayloadResponse {
-    PayloadServerResult result = 1;
+    PayloadServerResult payload_server_result = 1;
 }
 
 message RemovePayloadRequest {
@@ -63,7 +63,7 @@ message RemovePayloadRequest {
 }
 
 message RemovePayloadResponse {
-    PayloadServerResult result = 1;
+    PayloadServerResult payload_server_result = 1;
 }
 
 
@@ -73,8 +73,8 @@ message PayloadServerResult {
     enum Result {
         RESULT_UNKNOWN = 0; // Unknown result
         RESULT_SUCCESS = 1; // Request succeeded
-        CONNECTION_ERROR = 2; // Connection error
-        ID_NOT_FOUND = 3; // ID not found
+        RESULT_CONNECTION_ERROR = 2; // Connection error
+        RESULT_ID_NOT_FOUND = 3; // ID not found
     }
 
     Result result = 1; // Result enum value
