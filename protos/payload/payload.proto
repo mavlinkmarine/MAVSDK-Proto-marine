@@ -53,13 +53,13 @@ message PayloadItem {
 message GetPayloadListRequest {}
 
 message GetPayloadListResponse {
-    PayloadResult result = 1;
+    PayloadResult payload_result = 1;
     repeated PayloadItem payload_items = 2; // The payloads listed
 }
 
 message SubscribePayloadUpdateRequest {}
 message PayloadUpdateResponse {
-    PayloadResult result = 1;
+    PayloadResult payload_result = 1;
     repeated PayloadItem payload_items = 2;
 }
 
@@ -70,9 +70,9 @@ message PayloadResult {
     enum Result {
         RESULT_UNKNOWN = 0; // Unknown result
         RESULT_SUCCESS = 1; // Request succeeded
-        CONNECTION_ERROR = 2; // Connection error
-        NO_SYSTEM = 3; // No system available
-        TIMEOUT = 4; // Timeout happened
+        RESULT_CONNECTION_ERROR = 2; // Connection error
+        RESULT_NO_SYSTEM = 3; // No system available
+        RESULT_TIMEOUT = 4; // Timeout happened
     }
 
     Result result = 1; // Result enum value
