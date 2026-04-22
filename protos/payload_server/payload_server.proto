@@ -1,0 +1,123 @@
+syntax = "proto3";
+
+package mavsdk.rpc.payload_server;
+
+import "mavsdk_options.proto";
+
+option java_package = "io.mavsdk.payload_server";
+option java_outer_classname = "PayloadServerProto";
+
+// Provide payload information.
+service PayloadServerService {
+
+    /*
+     * Add a payload to the list.
+     */
+    rpc AddPayload(AddPayloadRequest) returns(AddPayloadResponse) { option (mavsdk.options.async_type) = SYNC; }
+
+    /*
+     * Remove payload.
+     */
+    rpc RemovePayload(RemovePayloadRequest) returns(RemovePayloadResponse) { option (mavsdk.options.async_type) = SYNC; }
+
+    /*
+     * Set payload status.
+     */
+    rpc SetPayloadStatus(SetPayloadStatusRequest) returns(SetPayloadStatusResponse) { option (mavsdk.options.async_type) = SYNC; }
+
+    /*
+     * Get payload status.
+     */
+    rpc GetPayloadStatus(GetPayloadStatusRequest) returns(GetPayloadStatusResponse) { option (mavsdk.options.async_type) = SYNC; }
+}
+
+// Supported payload types
+enum PayloadType {
+    PAYLOAD_TYPE_CAMERA = 0; // Generic Camera Payload
+    PAYLOAD_TYPE_LIDAR = 1; // Light Detection and Ranging Payload
+    PAYLOAD_TYPE_WINCH = 2; // Winch Payload
+    PAYLOAD_TYPE_ACOUSTIC_MODEM  = 3; // Acoustic Modem Payload
+    PAYLOAD_TYPE_SAS  = 4; // Single Aperture Sonar Payload
+    PAYLOAD_TYPE_MBES = 5; // Multi Beam Echo Sounder Payload
+    PAYLOAD_TYPE_FLS  = 6; // Forward Look Sonar Payload
+    PAYLOAD_TYPE_GENERIC_1 = 101; // Generic Payload 1
+    PAYLOAD_TYPE_GENERIC_2 = 102; // Generic Payload 2
+    PAYLOAD_TYPE_GENERIC_3 = 103; // Generic Payload 3
+    PAYLOAD_TYPE_GENERIC_4 = 104; // Generic Payload 4
+    PAYLOAD_TYPE_GENERIC_5 = 105; // Generic Payload 5
+    PAYLOAD_TYPE_UNKNOWN = 255; // Unknown Payload
+}
+
+// State of registered payload
+message PayloadState {
+    bool powered = 1; // Whether payload is powered
+    bool armed = 2; // Whether payload is armed
+    bool active = 3; // Whether payload is active
+}
+
+// Type for one payload item
+message PayloadItem {
+    uint32 id = 1; // The payload ID
+    string name = 2; // The payload name
+    PayloadType payload_type = 3; // The payload type
+    PayloadState valid_states = 4; // The valid states
+}
+
+message AddPayloadRequest {
+    PayloadItem item = 1; // The added item.
+}
+
+message AddPayloadResponse {
+    PayloadServerResult payload_server_result = 1;
+}
+
+message RemovePayloadRequest {
+    uint32 id = 1; // The ID of the payload to remove.
+}
+
+message RemovePayloadResponse {
+    PayloadServerResult payload_server_result = 1;
+}
+
+// Payload health type
+message PayloadHealth {
+    bool health_generic = 1; // whether payload is healthy
+}
+
+// Payload status type including health and state
+message PayloadStatus {
+    PayloadHealth payload_health = 1; // Payload health
+    PayloadState payload_state = 2; // Payload state
+}
+
+message SetPayloadStatusRequest {
+    uint32 id = 1; // The payload ID
+    PayloadStatus payload_status = 2; // The payload status
+}
+
+message SetPayloadStatusResponse {
+    PayloadServerResult payload_server_result = 1;
+}
+
+message GetPayloadStatusRequest {
+    uint32 id = 1; // The payload ID
+}
+
+message GetPayloadStatusResponse {
+    PayloadServerResult payload_server_result = 1;
+    PayloadStatus payload_status = 2; // The payload status
+}
+
+// Result type.
+message PayloadServerResult {
+    // Possible results returned for payload server requests.
+    enum Result {
+        RESULT_UNKNOWN = 0; // Unknown result
+        RESULT_SUCCESS = 1; // Request succeeded
+        RESULT_CONNECTION_ERROR = 2; // Connection error
+        RESULT_ID_NOT_FOUND = 3; // ID not found
+    }
+
+    Result result = 1; // Result enum value
+    string result_str = 2; // Human-readable English string describing the result
+}
