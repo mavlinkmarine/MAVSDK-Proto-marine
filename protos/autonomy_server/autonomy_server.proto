@@ -1,0 +1,126 @@
+syntax = "proto3";
+
+package mavsdk.rpc.autonomy_server;
+
+import "mavsdk_options.proto";
+
+option java_package = "io.mavsdk.autonomy_server";
+option java_outer_classname = "AutonomyServerProto";
+
+// Provide autonomy information.
+service AutonomyServerService {
+    /*
+     * Set state directly.
+     */
+    rpc SetState(SetStateRequest) returns(SetStateResponse) { option (mavsdk.options.async_type) = SYNC; }
+
+    /*
+     * Subscribe to autonomy state demands.
+     */
+    rpc SubscribeDemand(SubscribeDemandRequest) returns(stream DemandResponse) { option (mavsdk.options.async_type) = ASYNC; }
+
+    /*
+     * Respond to autonomy state demands.
+     */
+    rpc SetDemandAnswer(SetDemandAnswerRequest) returns(SetDemandAnswerResponse) { option (mavsdk.options.async_type) = SYNC; }
+
+    /*
+     * Describe the components' health.
+     */
+    rpc SetComponentHealth(SetComponentHealthRequest) returns(SetComponentHealthResponse) { option (mavsdk.options.async_type) = SYNC; }
+}
+
+message SetStateRequest {
+    AutonomyServerState state = 1; // The state to set
+}
+message SetStateResponse {
+    AutonomyServerResult result = 1;
+}
+
+message SubscribeDemandRequest {}
+message DemandResponse {
+    AutonomyServerDemand demand = 1; // The autonomy demand
+}
+
+message SetDemandAnswerRequest {
+    AutonomyServerDemandAnswer answer = 1; // The answer
+    AutonomyServerState state = 2; // The new state
+}
+message SetDemandAnswerResponse {}
+
+message SetComponentHealthRequest {
+    repeated AutonomyServerComponentHealth component_health = 2; // The components' health
+}
+message SetComponentHealthResponse {
+    AutonomyServerResult result = 1;
+}
+
+// Current state of the autonomy system
+enum AutonomyServerState {
+    AUTONOMY_SERVER_STATE_DEFAULT = 0; // Default state, ignored
+    AUTONOMY_SERVER_STATE_IDLE = 1; // System has not been started
+    AUTONOMY_SERVER_STATE_EXECUTING = 2; // Autonomy system executing and in control
+    AUTONOMY_SERVER_STATE_PAUSED = 3; // Autonomy system paused
+    AUTONOMY_SERVER_STATE_SUSPENDED = 4; // Autonomy system execution suspended temporarily
+    AUTONOMY_SERVER_STATE_COMPLETED = 5; // Autonomy system execution completed successfully
+    AUTONOMY_SERVER_STATE_STOPPED = 6; // Autonomy system execution stopped early
+    AUTONOMY_SERVER_STATE_RECOVERING = 7; // Autonomy system heading to recovery position.
+}
+
+// Demands to be made to the autonomy system
+enum AutonomyServerDemand {
+    AUTONOMY_SERVER_DEMAND_DEFAULT = 0; // Default value, ignored
+    AUTONOMY_SERVER_DEMAND_START = 1; // Start autonomy system
+    AUTONOMY_SERVER_DEMAND_STOP = 2; // Stop autonomy system
+    AUTONOMY_SERVER_DEMAND_GO_TO_RECOVERY = 3; // Abort autonomy system to the recovery point
+    AUTONOMY_SERVER_DEMAND_PAUSE = 4; // Pause autonomy system
+    AUTONOMY_SERVER_DEMAND_SUSPEND = 5; // Suspend autonomy system control temporarily
+    AUTONOMY_SERVER_DEMAND_RESUME = 6; // Resume autonomy system
+}
+
+// Ack/answer to demand
+enum AutonomyServerDemandAnswer {
+    AUTONOMY_SERVER_DEMAND_ANSWER_ACCEPTED = 0; // Demand has been accepted
+    AUTONOMY_SERVER_DEMAND_ANSWER_DENIED = 1; // Demand has been denied
+    AUTONOMY_SERVER_DEMAND_ANSWER_TEMPORARILY_REJECTED = 2; // Demand can't be handled right now
+}
+
+// Components that can be present in an autonomy system
+enum AutonomyServerComponent {
+    AUTONOMY_SERVER_COMPONENT_CORE = 0; // Autonomy system core
+    AUTONOMY_SERVER_COMPONENT_ATR = 1; // Automated target recognition
+    AUTONOMY_SERVER_COMPONENT_SAS = 2; // Synthetic aperture sonar
+    AUTONOMY_SERVER_COMPONENT_MBES = 4; // Multi beam echo sounder
+    AUTONOMY_SERVER_COMPONENT_FLS = 5; // Forward look sonar
+    AUTONOMY_SERVER_COMPONENT_CAMERA = 6; // Camera
+    AUTONOMY_SERVER_COMPONENT_ACOMMS = 7; // Acomms modem
+    AUTONOMY_SERVER_COMPONENT_MISSION = 8; // Mission
+}
+
+//  Type to describe one component of an autonomy system
+message AutonomyServerComponentHealth {
+    AutonomyServerComponent component = 1; // component described
+    bool present = 2; // whether component is present
+    bool enabled = 3; // whether component is enabled
+    bool healthy = 4; // whether component is healthy
+}
+
+// Type describing the system state and enumerating component health
+message AutonomyServerStatus {
+    AutonomyServerState system_state = 1; // The system state
+    repeated AutonomyServerComponentHealth component_health = 2; // The components' health
+}
+
+// Result type.
+message AutonomyServerResult {
+    // Possible results returned for param requests.
+    enum Result {
+        RESULT_UNKNOWN = 0; // Unknown result
+        RESULT_SUCCESS = 1; // Request succeeded
+        CONNECTION_ERROR = 2; // Connection error
+        ID_NOT_FOUND = 3; // ID not found
+    }
+
+    Result result = 1; // Result enum value
+    string result_str = 2; // Human-readable English string describing the result
+}
