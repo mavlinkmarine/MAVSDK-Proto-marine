@@ -625,7 +625,6 @@ message Battery {
     float remaining_percent = 6 [(mavsdk.options.default_value)="NaN"]; // Estimated battery remaining (range: 0 to 100)
     float time_remaining_s = 7 [(mavsdk.options.default_value)="NaN"]; // Estimated battery usage time remaining 
     BatteryFunction battery_function = 8; // Function of the battery
-    float energy_consumed_wh = 9 [(mavsdk.options.default_value)="NaN"]; // Consumed energy in Watt-hours, NAN if autopilot does not provide energy consumption estimate
 }
 
 /*
