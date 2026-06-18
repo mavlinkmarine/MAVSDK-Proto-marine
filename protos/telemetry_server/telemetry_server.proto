@@ -46,6 +46,12 @@ service TelemetryServerService {
     rpc PublishAttitude(PublishAttitudeRequest) returns(PublishAttitudeResponse) { option (mavsdk.options.async_type) = SYNC; }
     // Publish to "Visual Flight Rules HUD" updates.
     rpc PublishVisualFlightRulesHud(PublishVisualFlightRulesHudRequest) returns(PublishVisualFlightRulesHudResponse) { option (mavsdk.options.async_type) = SYNC; }
+    // Publish to 'wind' updates.
+    rpc PublishWind(PublishWindRequest) returns(PublishWindResponse) { option (mavsdk.options.async_type) = SYNC; }
+    // Publish to 'water_current' updates.
+    rpc PublishWaterCurrent(PublishWaterCurrentRequest) returns(PublishWaterCurrentResponse) { option (mavsdk.options.async_type) = SYNC; }
+    // Publish to 'DVL' updates.
+    rpc PublishDopplerVelocityLog(PublishDopplerVelocityLogRequest) returns(PublishDopplerVelocityLogResponse) { option (mavsdk.options.async_type) = SYNC; }
 }
 
 message PublishPositionRequest {
@@ -138,6 +144,18 @@ message PublishVisualFlightRulesHudRequest {
     FixedwingMetrics fixed_wing_metrics = 1;
 }
 
+message PublishWindRequest {
+    Wind wind = 1; // The next 'wind' update
+}
+
+message PublishWaterCurrentRequest {
+    WaterCurrent water_current = 1; // The next 'water_current' update
+}
+
+message PublishDopplerVelocityLogRequest {
+    DopplerVelocityLog doppler_velocity_log = 1; // The next 'doppler_velocity_log' update
+}
+
 message PublishPositionResponse {
     TelemetryServerResult telemetry_server_result = 1;
 }
@@ -191,7 +209,6 @@ message PublishRawImuResponse {
     TelemetryServerResult telemetry_server_result = 1;
 }
 
-
 message PublishUnixEpochTimeResponse {
     TelemetryServerResult telemetry_server_result = 1;
 }
@@ -205,6 +222,18 @@ message PublishAttitudeResponse {
 }
 
 message PublishVisualFlightRulesHudResponse {
+    TelemetryServerResult telemetry_server_result = 1;
+}
+
+message PublishWindResponse {
+    TelemetryServerResult telemetry_server_result = 1;
+}
+
+message PublishWaterCurrentResponse {
+    TelemetryServerResult telemetry_server_result = 1;
+}
+
+message PublishDopplerVelocityLogResponse {
     TelemetryServerResult telemetry_server_result = 1;
 }
 
@@ -492,6 +521,39 @@ message Imu {
     MagneticFieldFrd magnetic_field_frd = 3; // Magnetic field
     float temperature_degc = 4 [(mavsdk.options.default_value)="NaN"]; // Temperature
     uint64 timestamp_us = 5; // Timestamp in microseconds
+}
+
+// Wind message type
+message Wind {
+    float wind_x_ned_m_s = 1 [(mavsdk.options.default_value)="NaN"]; // Wind in North (NED) direction
+    float wind_y_ned_m_s = 2 [(mavsdk.options.default_value)="NaN"]; //  Wind in East (NED) direction
+    float wind_z_ned_m_s = 3 [(mavsdk.options.default_value)="NaN"]; // Wind in down (NED) direction
+    float horizontal_variability_stddev_m_s = 4 [(mavsdk.options.default_value)="NaN"]; // Variability of wind in XY, 1-STD estimated from a 1 Hz lowpassed wind estimate
+    float vertical_variability_stddev_m_s = 5 [(mavsdk.options.default_value)="NaN"]; // Variability of wind in Z, 1-STD estimated from a 1 Hz lowpassed wind estimate
+    float wind_altitude_msl_m = 6 [(mavsdk.options.default_value)="NaN"]; // Altitude (MSL) that this measurement was taken at
+    float horizontal_wind_speed_accuracy_m_s = 7 [(mavsdk.options.default_value)="NaN"]; // Horizontal speed 1-STD accuracy
+    float vertical_wind_speed_accuracy_m_s = 8 [(mavsdk.options.default_value)="NaN"]; // Vertical speed 1-STD accuracy
+    uint64 timestamp_us = 9 [(mavsdk.options.default_value)="NaN"]; // Timestamp in microseconds
+}
+
+// Water current message type
+message WaterCurrent {
+    float measured_current_x_m_s = 1 [(mavsdk.options.default_value)="NaN"]; // Raw measured water current in North (NED) direction in meters/second
+    float measured_current_y_m_s = 2 [(mavsdk.options.default_value)="NaN"]; // Raw measured water current in East (NED) direction in meters/second
+    float measured_current_z_m_s = 3 [(mavsdk.options.default_value)="NaN"]; // Raw measured water current in down (NED) direction in meters/second
+    float calculated_current_x_m_s = 4 [(mavsdk.options.default_value)="NaN"]; // Calculated water current in North (NED) direction in meters/second
+    float calculated_current_y_m_s = 5 [(mavsdk.options.default_value)="NaN"]; // Calculated water current in East (NED) direction in meters/second
+    float calculated_current_z_m_s = 6 [(mavsdk.options.default_value)="NaN"]; // Calculated water current in down (NED) direction in meters/second
+    float distance_m = 7 [(mavsdk.options.default_value)="NaN"]; // Measurement distance from the sensor in meters
+}
+
+// Dopper Velocity Log (DVL) message type
+message DopplerVelocityLog {
+    bool has_lock = 1; // Whether DVL has bottom lock to the floor
+    repeated float altitude_waters_m = 2; // Vehicle altitude to the floor of body of water for each beam (up to 16)
+    float vehicle_velocity_x_m_s = 3 [(mavsdk.options.default_value)="NaN"]; // Vehicle velocity in North (NED) direction in meters/second
+    float vehicle_velocity_y_m_s = 4 [(mavsdk.options.default_value)="NaN"]; // Vehicle velocity in East (NED) direction in meters/second
+    float vehicle_velocity_z_m_s = 5 [(mavsdk.options.default_value)="NaN"]; // Vehicle velocity in down (NED) direction in meters/second
 }
 
 // Result type.
